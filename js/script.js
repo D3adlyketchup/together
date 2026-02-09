@@ -5,12 +5,12 @@ function updateTimer() {
     let diffMs = now - startDate;
 
     if (diffMs < 0) {
-        document.getElementById("timer").innerHTML =
-            "Onze liefde begint hier ❤️";
+        document.getElementById("totalTime").innerHTML = "Nog niet begonnen ❤️";
+        document.getElementById("splitTime").innerHTML = "Nog even geduld 💕";
         return;
     }
 
-    // Totale waarden
+    // Totale tijd
     const totalSeconds = Math.floor(diffMs / 1000);
     const totalMinutes = Math.floor(totalSeconds / 60);
     const totalHours = Math.floor(totalMinutes / 60);
@@ -18,7 +18,7 @@ function updateTimer() {
     const totalWeeks = Math.floor(totalDays / 7);
     const totalMonths = Math.floor(totalDays / 30.44);
 
-    // Opgesplitste (echte) tijd
+    // Opgesplitste tijd
     let remaining = totalSeconds;
 
     const years = Math.floor(remaining / (365.25 * 24 * 3600));
@@ -36,16 +36,16 @@ function updateTimer() {
     const minutes = Math.floor(remaining / 60);
     const seconds = Math.floor(remaining % 60);
 
-    document.getElementById("timer").innerHTML = `
-        💖 <strong>In totaal samen:</strong><br>
+    document.getElementById("totalTime").innerHTML = `
         💕 ${totalMonths} maanden<br>
         💖 ${totalWeeks} weken<br>
         💗 ${totalDays} dagen<br>
         💘 ${totalHours} uren<br>
         💞 ${totalMinutes} minuten<br>
-        ❤️ ${totalSeconds} seconden<br><br>
+        ❤️ ${totalSeconds} seconden
+    `;
 
-        💞 <strong>Dat is:</strong><br>
+    document.getElementById("splitTime").innerHTML = `
         ❤️ ${years} jaar<br>
         💕 ${months} maanden<br>
         💗 ${days} dagen<br>
