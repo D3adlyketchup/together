@@ -1,16 +1,54 @@
 const startDate = new Date("2025-11-11T17:00:00");
 
+function getCalendarDiff(start, end) {
+    let years = end.getFullYear() - start.getFullYear();
+    let months = end.getMonth() - start.getMonth();
+    let days = end.getDate() - start.getDate();
+    let hours = end.getHours() - start.getHours();
+    let minutes = end.getMinutes() - start.getMinutes();
+    let seconds = end.getSeconds() - start.getSeconds();
+
+    if (seconds < 0) {
+        seconds += 60;
+        minutes--;
+    }
+
+    if (minutes < 0) {
+        minutes += 60;
+        hours--;
+    }
+
+    if (hours < 0) {
+        hours += 24;
+        days--;
+    }
+
+    if (days < 0) {
+        const previousMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+        days += previousMonth.getDate();
+        months--;
+    }
+
+    if (months < 0) {
+        months += 12;
+        years--;
+    }
+
+    return { years, months, days, hours, minutes, seconds };
+}
+
 function updateTimer() {
     const now = new Date();
-    let diffMs = now - startDate;
 
-    if (diffMs < 0) {
+    if (now < startDate) {
         document.getElementById("totalTime").innerHTML = "Nog niet begonnen ❤️";
         document.getElementById("splitTime").innerHTML = "Nog even geduld 💕";
         return;
     }
 
-    // Totale tijd
+    const diffMs = now - startDate;
+
+    // 🔢 Totale tijd (milliseconden → alles)
     const totalSeconds = Math.floor(diffMs / 1000);
     const totalMinutes = Math.floor(totalSeconds / 60);
     const totalHours = Math.floor(totalMinutes / 60);
@@ -18,23 +56,8 @@ function updateTimer() {
     const totalWeeks = Math.floor(totalDays / 7);
     const totalMonths = Math.floor(totalDays / 30.44);
 
-    // Opgesplitste tijd
-    let remaining = totalSeconds;
-
-    const years = Math.floor(remaining / (365.25 * 24 * 3600));
-    remaining -= years * 365.25 * 24 * 3600;
-
-    const months = Math.floor(remaining / (30.44 * 24 * 3600));
-    remaining -= months * 30.44 * 24 * 3600;
-
-    const days = Math.floor(remaining / (24 * 3600));
-    remaining -= days * 24 * 3600;
-
-    const hours = Math.floor(remaining / 3600);
-    remaining -= hours * 3600;
-
-    const minutes = Math.floor(remaining / 60);
-    const seconds = Math.floor(remaining % 60);
+    // 📅 Kalender-correct verschil
+    const diff = getCalendarDiff(startDate, now);
 
     document.getElementById("totalTime").innerHTML = `
         💕 ${totalMonths} maanden<br>
@@ -46,12 +69,12 @@ function updateTimer() {
     `;
 
     document.getElementById("splitTime").innerHTML = `
-        ❤️ ${years} jaar<br>
-        💕 ${months} maanden<br>
-        💗 ${days} dagen<br>
-        💘 ${hours} uren<br>
-        💞 ${minutes} minuten<br>
-        ❤️ ${seconds} seconden
+        ❤️ ${diff.years} jaar<br>
+        💕 ${diff.months} maanden<br>
+        💗 ${diff.days} dagen<br>
+        💘 ${diff.hours} uren<br>
+        💞 ${diff.minutes} minuten<br>
+        ❤️ ${diff.seconds} seconden
     `;
 }
 
